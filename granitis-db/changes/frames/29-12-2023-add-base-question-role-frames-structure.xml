@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone='no'?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-question-role-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="question_role_frames"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="question_role_frames">
+            <column name="id_frame" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_question_role_frame"/>
+            </column>
+            <column name="id_term_preposition" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_term_pronoun_interrogative_relative_adverb" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_frame" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Comment" type="nvarchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-preposition-in-question-role-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_preposition_in_question_role_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_preposition_in_question_role_frames"
+                                 baseTableName="question_role_frames"
+                                 baseColumnNames="id_term_preposition"
+                                 referencedTableName="terms"
+                                 referencedColumnNames="id_term"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-pronoun-interrogative-relative-adverb-in_question-role-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_pronoun_interrogative_relative_adverb_in_question_role_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_pronoun_interrogative_relative_adverb_in_question_role_frames"
+                                 baseTableName="question_role_frames"
+                                 baseColumnNames="id_term_pronoun_interrogative_relative_adverb"
+                                 referencedTableName="terms"
+                                 referencedColumnNames="id_term"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-frame-in-question-role-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_frame_in_question_role_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_frame_in_question_role_frames"
+                                 baseTableName="question_role_frames"
+                                 baseColumnNames="id_meaning_frame"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+</databaseChangeLog>

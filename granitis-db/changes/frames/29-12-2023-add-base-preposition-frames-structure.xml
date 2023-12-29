@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone='no'?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="preposition_frames">
+            <column name="id_frame" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_preposition_frame"/>
+            </column>
+            <column name="id_term_preposition" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_add_noun_1" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_add_noun_2" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_trait_case_2" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_frame" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Comment" type="nvarchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-preposition-in-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_preposition_in_preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_preposition_in_preposition_frames"
+                                 baseTableName="preposition_frames"
+                                 baseColumnNames="id_term_preposition"
+                                 referencedTableName="terms"
+                                 referencedColumnNames="id_term"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-trait-case-2-in-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_trait_case_2_in_preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_trait_case_2_in_preposition_frames"
+                                 baseTableName="preposition_frames"
+                                 baseColumnNames="id_trait_case_2"
+                                 referencedTableName="morphological_traits"
+                                 referencedColumnNames="id_trait"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-add-noun-1-in-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_add_noun_1_in_preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_add_noun_1_in_preposition_frames"
+                                 baseTableName="preposition_frames"
+                                 baseColumnNames="id_meaning_add_noun_1"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-add-noun-2-in-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_add_noun_2_in_preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_add_noun_2_in_preposition_frames"
+                                 baseTableName="preposition_frames"
+                                 baseColumnNames="id_meaning_add_noun_2"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-frame-in-preposition-frames">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_frame_in_preposition_frames"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_frame_in_preposition_frames"
+                                 baseTableName="preposition_frames"
+                                 baseColumnNames="id_meaning_frame"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+</databaseChangeLog>
