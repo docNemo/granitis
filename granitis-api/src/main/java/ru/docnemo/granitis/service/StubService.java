@@ -7,7 +7,6 @@ import ru.docnemo.granitis.core.repository.lexical.LexemeRepository;
 import ru.docnemo.granitis.core.repository.lexical.TermRepository;
 import ru.docnemo.granitis.dto.request.StubRequest;
 import ru.docnemo.granitis.dto.response.StubResponse;
-import ru.docnemo.granitis.core.repository.frame.QuestionRoleFramesRepository;
 
 @Slf4j
 @RequiredArgsConstructor
