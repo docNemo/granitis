@@ -15,13 +15,5 @@ springdoc:
     path: '/swagger-ui'
 
 spring:
-  datasource:
-    password: ${database.password}
-    driver-class-name: org.h2.Driver
-#    jdbcUrl: jdbc:postgresql://${database.host}/arachni
-    url: jdbc:h2:mem:granitis_db
-    username: granitis_app
-  h2:
-    console.enabled: true
-  liquibase:
-    enabled: 'false'
+  profiles:
+    active: h2

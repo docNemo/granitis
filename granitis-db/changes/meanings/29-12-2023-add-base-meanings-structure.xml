@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone='no'?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-meaning-types">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="meaning_types"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="meaning_types">
+            <column name="id_type" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_meaning_type"/>
+            </column>
+            <column name="type" type="nvarchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="meanings"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="meanings">
+            <column name="id_meaning" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_meaning"/>
+            </column>
+            <column name="id_type" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meaning" type="nvarchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-types-in-meaning">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_types_in_meanings"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_types_in_meanings"
+                                 baseTableName="meanings"
+                                 baseColumnNames="id_type"
+                                 referencedTableName="meaning_types"
+                                 referencedColumnNames="id_type"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-term-main-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="term_main_meanings"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="term_main_meanings">
+            <column name="id_term_main_meaning" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_term_main_meaning"/>
+            </column>
+            <column name="id_term" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_main" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="nvarchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-in-term-main-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_in_term_main_meanings"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_in_term_main_meanings"
+                                 baseTableName="term_main_meanings"
+                                 baseColumnNames="id_meaning_main"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-in-term-main-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_in_term_main_meanings"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_in_term_main_meanings"
+                                 baseTableName="term_main_meanings"
+                                 baseColumnNames="id_term"
+                                 referencedTableName="terms"
+                                 referencedColumnNames="id_term"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-term-add-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="term_add_meanings"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="term_add_meanings">
+            <column name="id_term_add_meaning" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_term_add_meaning"/>
+            </column>
+            <column name="id_term_main_meaning" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_meaning_add" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="nvarchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-meaning-in-term-add-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_meaning_in_term_add_meanings"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_meaning_in_term_add_meanings"
+                                 baseTableName="term_add_meanings"
+                                 baseColumnNames="id_meaning_add"
+                                 referencedTableName="meanings"
+                                 referencedColumnNames="id_meaning"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-main-meaning-in-term-add-meanings">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_main_meaning_in_term_add_meanings"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_main_meaning_in_term_add_meanings"
+                                 baseTableName="term_add_meanings"
+                                 baseColumnNames="id_term_main_meaning"
+                                 referencedTableName="term_main_meanings"
+                                 referencedColumnNames="id_term_main_meaning"
+        />
+    </changeSet>
+
+</databaseChangeLog>

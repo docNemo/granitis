@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone='no'?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-lexemes">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="lexemes"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="lexemes">
+            <column name="id_lexeme" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_lexeme"/>
+            </column>
+            <column name="lexeme" type="nvarchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-morphological-trait-types">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="morphological_trait_types"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="morphological_trait_types">
+            <column name="id_trait_type" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_morphological_trait_type"/>
+            </column>
+            <column name="trait_type" type="nvarchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-morphological-traits">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="morphological_traits"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="morphological_traits">
+            <column name="id_trait" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_morphological_trait"/>
+            </column>
+            <column name="id_trait_type" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trait" type="nvarchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-trait-types-in-morphological-traits">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_trait_types_in_morphological_traits"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_trait_types_in_morphological_traits"
+                                 baseTableName="morphological_traits"
+                                 baseColumnNames="id_trait_type"
+                                 referencedTableName="morphological_trait_types"
+                                 referencedColumnNames="id_trait_type"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-terms">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="terms"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="terms">
+            <column name="id_term" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_term"/>
+            </column>
+            <column name="id_trait_part_of_speech" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_trait_subclass" type="bigint">
+            </column>
+            <column name="comment" type="nvarchar(256)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-trait-part-of-speech-in-terms">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_trait_part_of_speech_in_terms"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_trait_part_of_speech_in_terms"
+                                 baseTableName="terms"
+                                 baseColumnNames="id_trait_part_of_speech"
+                                 referencedTableName="morphological_traits"
+                                 referencedColumnNames="id_trait"
+        />
+    </changeSet>
+    
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-trait-subclass-in-terms">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_trait_subclass_in_terms"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_trait_subclass_in_terms"
+                                 baseTableName="terms"
+                                 baseColumnNames="id_trait_subclass"
+                                 referencedTableName="morphological_traits"
+                                 referencedColumnNames="id_trait"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-table-terms-components">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="term_components"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="term_components">
+            <column name="id_component" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_terms_component"/>
+            </column>
+            <column name="id_term" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_lexeme" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_main_lexeme" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position_lexeme" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-term-in-term-components">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_term_in_term_components"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_term_in_term_components"
+                                 baseTableName="term_components"
+                                 baseColumnNames="id_term"
+                                 referencedTableName="terms"
+                                 referencedColumnNames="id_term"
+        />
+    </changeSet>
+
+    <changeSet author="vsurubkov" id="29-12-2023-add-foreign-key-lexeme-in-term-components">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_lexeme_in_term_components"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_lexeme_in_term_components"
+                                 baseTableName="term_components"
+                                 baseColumnNames="id_lexeme"
+                                 referencedTableName="lexemes"
+                                 referencedColumnNames="id_lexeme"
+        />
+    </changeSet>
+
+</databaseChangeLog>
